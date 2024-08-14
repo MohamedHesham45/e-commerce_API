@@ -17,7 +17,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/product')
 app.get('/', (req, res) => {
     res.send('API is working');
 });
-app.use('/products', productRoutes); 
+app.use('/products', productRoutes);
 app.use('/categories', categoryRoutes);
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

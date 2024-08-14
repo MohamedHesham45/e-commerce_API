@@ -1,11 +1,11 @@
 const Joi = require('joi');
 
 const productValidationSchema = Joi.object({
-  title: Joi.string(),
+  title: Joi.string().required(),
   description: Joi.string(),
-  categoryID: Joi.number().required(),  // Only categoryID is required
+  categoryID: Joi.number(),
   price: Joi.number(),
-  discountPercentage: Joi.number().min(0).max(100),
+  discountPercentage: Joi.number(),
   stock: Joi.number(),
   brand: Joi.string(),
   dimensions: Joi.object({
@@ -14,13 +14,15 @@ const productValidationSchema = Joi.object({
     depth: Joi.number(),
   }),
   warrantyInformation: Joi.string(),
-  availabilityStatus: Joi.string().valid('In Stock', 'Out of Stock'),
+  availabilityStatus: Joi.string(),
   returnPolicy: Joi.string(),
   meta: Joi.object({
-    barcode: Joi.string(),
+    createdAt: Joi.date(),
+    updatedAt: Joi.date(),
+    barcode: Joi.string()
   }),
   images: Joi.array().items(Joi.string()),
-  thumbnail: Joi.string(),
+  thumbnail: Joi.string()
 });
 
 module.exports = { productValidationSchema };
