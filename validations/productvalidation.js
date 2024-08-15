@@ -3,7 +3,7 @@ const Joi = require('joi');
 const productValidationSchema = Joi.object({
   title: Joi.string().required(),
   description: Joi.string(),
-  categoryID: Joi.number(),
+  categoryID: Joi.number().required(),
   price: Joi.number(),
   discountPercentage: Joi.number(),
   stock: Joi.number(),

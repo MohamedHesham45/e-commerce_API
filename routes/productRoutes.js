@@ -6,9 +6,8 @@ const {
     deleteProduct, 
     getProducts, 
     getProductById 
-} = require('../controllers/productController'); // تأكد من اسم الملف هنا
+} = require('../controllers/productController'); 
 
-// Define routes
 router.post('/', createProduct);
 router.get('/', getProducts);
 router.get('/:id', getProductById);

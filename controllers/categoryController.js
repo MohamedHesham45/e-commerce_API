@@ -43,9 +43,10 @@ exports.updateCategory = async (req, res) => {
     if (!category) throw new CustomError("Category not found", 404);
     res.status(200).json(category);
   } catch (error) {
-    res.status(error.statusCode || 500).json({ message: error.message });
+    next(error);
   }
-};
+  
+}
 
 exports.deleteCategory = async (req, res) => {
   try {

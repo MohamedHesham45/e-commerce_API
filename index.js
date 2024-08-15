@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const productRoutes = require('./routes/productRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
-
+const CustomError= require("./utils/CustomError")
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -19,6 +19,11 @@ app.get('/', (req, res) => {
 });
 app.use('/products', productRoutes);
 app.use('/categories', categoryRoutes);
+app.use((error, req, res, next) => {
+   const { message, statusCode } = error;
+  console.log(error);
+  res.status(400).json({ message: error.message });
+});
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });

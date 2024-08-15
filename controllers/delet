@@ -54,3 +54,9 @@
 //     res.status(error.statusCode || 500).json({ message: error.message });
 //   }
 // };
+
+// the object.assign is object constracto This is a method that copies the properties from one or more source objects to a target object.
+// product: This is the target object, which is the existing product object that we want to update.
+// req.body: This is the source object, which contains the new data sent in the request body.
+//     await product.save();
+
