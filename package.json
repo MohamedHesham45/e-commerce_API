@@ -1,0 +1,33 @@
+{
+  "name": "e-commerce_api",
+  "version": "1.0.0",
+  "description": "E-commerce API ",
+  "main": "app.js",
+  "scripts": {
+    "start":"nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MohamedHesham45/e-commerce_API.git"
+  },
+  "author": "mohamed && amr && fatma && hossam && ebrahem",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MohamedHesham45/e-commerce_API/issues"
+  },
+  "homepage": "https://github.com/MohamedHesham45/e-commerce_API#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-async-errors": "^3.1.1",
+    "imagekit": "^5.1.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.3",
+    "multer": "^1.4.5-lts.1",
+    "sharp": "^0.33.4",
+    "winston": "^3.14.1"
+  }
+}
