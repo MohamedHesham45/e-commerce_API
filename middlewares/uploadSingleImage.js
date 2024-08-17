@@ -19,7 +19,6 @@ const singleImageUpload = async (req, res, next) => {
         });
 
         req.user.image = response.url; 
-        req.user.imageId=response.fileId
         next();
     } catch (err) {
         return next(new CustomError('Image upload failed', 500));

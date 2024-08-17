@@ -1,4 +1,5 @@
 const User = require("../models/users");
+const CustomError = require('../utils/customError');
 
 exports.creatAdmin = async(req,res,next)=>{
     const { name, email, password } = req.body;
@@ -6,26 +7,13 @@ exports.creatAdmin = async(req,res,next)=>{
     try {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return next(new CustomError("Email is already used.", 409));
+            return next(new CustomError("Email is already in use.", 409));
         }
-
-
         const user = new User({ name, email, password,role:"admin" });
         await user.save();
-
-        res.status(201).send({ message: "User created", user });
+        res.status(201).send({ message: "Admin user created successfully", user });
     } catch (error) {
-        next(new CustomError("Internal server error.", 500));
+        next(new CustomError(error.message, 500));
     }
 }
 
-// exports.confirmProduct= async(req,res,next)=>{
-
-
-// }
-// exports.deleteProduct= async(req,res,next)=>{
-
-// }
-// exports.updateProduct= async(req,res,next)=>{
-
-// }

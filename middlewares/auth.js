@@ -2,14 +2,12 @@ const User = require('../models/users');
 const jwt = require('jsonwebtoken');
 const util = require('util');
 const CustomError = require('../utils/customError');
-const { log } = require('console');
 require('dotenv').config(); 
 const jwtVerify = util.promisify(jwt.verify);
 
 module.exports = async (req, res, next) => {
   try {
     const { authorization: token } = req.headers;
-
     if (!token || !token.startsWith('Bearer ')) {
       throw new CustomError('No token provided or token format is incorrect', 401);
     }
@@ -32,7 +30,6 @@ module.exports = async (req, res, next) => {
     } else if (err.name === 'JsonWebTokenError') {
       return next(new CustomError('Invalid token', 401));
     }
-    console.error('Authentication error:', err); 
-    return next(new CustomError('Internal server error', 500));
+    return next(new CustomError(err.message, 500));
   }
 };

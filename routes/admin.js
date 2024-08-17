@@ -7,3 +7,4 @@ const checkRole=require("../middlewares/checkRole")
 const auth=require("../middlewares/auth")
 
 router.post("/creatAdmin",auth,checkRole(["admin"]),validation(createUser), creatAdmin);
+module.exports = router; 

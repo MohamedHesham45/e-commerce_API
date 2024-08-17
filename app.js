@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 require("express-async-errors");
 const User = require("./models/users");
 const usersRoute = require("./routes/user");
+const adminRoute = require("./routes/admin");
 const loggerMiddleware = require('./middlewares/loggerMid');
 const logger = require('./utils/loggerFun');
 const CustomError = require('./utils/customError');
@@ -15,6 +16,8 @@ app.use(express.static("./public"));
 app.use(loggerMiddleware);
 
 app.use(usersRoute);
+app.use(adminRoute);
+
 
 app.use((err, req, res, next) => {
     logger.error(`${req.method} ${req.url} - ${new Date().toISOString()} - Error: ${err.message}`);

@@ -5,12 +5,11 @@ const multipleImagesUpload = async (req, res, next) => {
     if (!req.files || req.files.length === 0) {
         return next(new CustomError('No files uploaded', 400));
     }
-
     try {
         const uploadPromises = req.files.map(file => {
             return imagekit.upload({
                 file: file.buffer,
-                fileName: file.originalname + Date.now(),
+                fileName: `image-${req.user.id}` + Date.now(),
                 folder: 'test'
             });
         });

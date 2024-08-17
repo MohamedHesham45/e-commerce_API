@@ -20,12 +20,13 @@ const userSchema = new Schema({
     type: String,
     default: "user",
   },
-  cart: {
-    type: Array,
-  },
-  favourite:{
-    type:Array,
-  }
+  cart: [{
+    productId: { type: Schema.Types.ObjectId, ref: 'Product' },
+    quantity: { type: Number, default: 1 }
+  }],
+
+  favourite: [{ type: Schema.Types.ObjectId, ref: 'Product' }]
+
 },
   {
     timestamps: true,
