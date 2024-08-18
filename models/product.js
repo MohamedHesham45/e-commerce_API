@@ -1,30 +1,36 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
-    // the requer one in mongo
   title: { type: String, required: true },
   description: { type: String, required: true },
-  categoryID: { type: Number },
+  categoryID: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
   price: { type: Number, required: true },
   discountPercentage: { type: Number },
   stock: { type: Number, required: true },
-  //here
   brand: { type: String },
-  dimensions: {
-    width: { type: Number },
-    height: { type: Number },
-    depth: { type: Number }
-  },
+  dimensions: { type: String },
   warrantyInformation: { type: String },
-  availabilityStatus: { type: String },
-  returnPolicy: { type: String },
-  meta: {
+  meta: { barcode: { type: String } },
+  images: [String],
+  thumbnail: { type: String },
+  reviews: [{
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    reviewText: { type: String },
+    rating: { type: Number, required: true, min: 1, max: 5 },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
-    barcode: { type: String }
-  },
-  images: [String],
-  thumbnail: { type: String }
-});
+  }],
+  rating: { type: Number, default: 0 },
+}, { timestamps: true });
 
-module.exports = mongoose.model('Product', productSchema);
+productSchema.methods.calculateRating = function () {
+  if (this.reviews.length > 0) {
+    const sum = this.reviews.reduce((total, review) => total + review.rating, 0);
+    this.rating = sum / this.reviews.length;
+  } else {
+    this.rating = 0;
+  }
+  return this.rating;
+};
+
+module.exports = mongoose.model("Product", productSchema);
