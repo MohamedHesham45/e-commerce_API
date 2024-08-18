@@ -8,4 +8,4 @@ const updateCategoryValidation = Joi.object({
   })
 });
 
-module.exports = { categoryValidationSchema };
+module.exports = { updateCategoryValidation };
