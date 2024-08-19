@@ -107,9 +107,7 @@ const changePassword=Joi.object({
 
 })
 
-const tokenRefresh =Joi.object({
-  token:Joi.string().required()
-})
+
 
 const forgetPasswordUser = Joi.object({
   email: Joi.string().email().required().messages({
@@ -158,7 +156,6 @@ const resetPasswordUser = Joi.object({
 module.exports = {
   createUser,
   loginUser,
-  tokenRefresh,
   changePassword,
   updateProfile,
   forgetPasswordUser,

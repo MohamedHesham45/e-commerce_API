@@ -54,22 +54,6 @@ exports.login = async (req, res, next) => {
     next(new CustomError("Internal server error", 500));
   }
 };
-
-// exports.refreshToken=async (req, res) => {
-//     const { token } = req.body;
-//     if (!token) return next(new CustomError('No token provided ', 401));
-
-//     jwt.verify(token, process.env.JWT_SECRET_REFRESH_TOKEN, (err, user) => {
-//         if (err) return next(new CustomError('Invalid or expired refresh token ', 403));
-
-//         const newAccessToken = jwt.sign({ userId: user.userId }, process.env.JWT_SECRET_ACCESS_TOKEN, { expiresIn: '15m' });
-//         res.status(200).send({
-//             massage:"New access token has been issued successfully.",
-//              accessToken: newAccessToken
-//             });
-//     })
-// }
-
 exports.updateProfileUser = async (req, res, next) => {
   try {
     const user = await User.findByIdAndUpdate(
@@ -130,7 +114,7 @@ exports.forgetPassword = async (req, res, next) => {
     user.resetTokenExpiration = resetTokenExpiration;
 
     const mailOptions = {
-      from: "Itians <amrkataria1234@gmail.com>",
+      from: `Itians <${process.env.NODEMIALER_EMAIL}>`,
       to: user.email,
       subject: "Password Reset",
       text: `this is reset token ${resetToken}`,
@@ -176,5 +160,112 @@ exports.restPassword = async (req, res, next) => {
     res.status(200).send({ message: "Password reset successfully" });
   } catch (error) {
     next(new CustomError("Internal server error.", 500));
+  }
+};
+
+
+exports.updateCartQuantity = async (req, res, next) => {
+  try {
+      const user = req.user;
+      const productId = req.params.productId;
+      const quantity = parseInt(req.body.quantity) || 1;
+
+      if (isNaN(quantity)) {
+          return next(new CustomError("Invalid quantity", 400));
+      }
+
+      const cartItem = user.cart.find(item => item.productId.toString() === productId);
+
+      if (cartItem) {
+          cartItem.quantity += quantity;
+
+          if (cartItem.quantity <= 0) {
+              user.cart = user.cart.filter(item => item.productId.toString() !== productId);
+              return res.status(200).send({ message: "Product removed from cart", cart: user.cart });
+          }
+      } else {
+          if (quantity > 0) {
+              user.cart.push({ productId, quantity });
+          } else {
+              return next(new CustomError("Invalid operation. Cannot add a product with negative or zero quantity.", 400));
+          }
+      }
+
+      await user.save();
+      res.status(200).send({ message: "Cart updated successfully", cart: user.cart });
+
+  } catch (error) {
+      return next(new CustomError(error.message, 500));
+  }
+};
+
+
+exports.removeFromCart = async (req, res) => {
+  try {
+      const user = req.user;
+      const productId = req.params.productId;
+
+      const isInCart = user.cart.some(item => item.productId.toString() === productId);
+
+      if (isInCart) {
+          user.cart = user.cart.filter(item => item.productId.toString() !== productId);
+          await user.save();
+          return res.status(200).send({ message: "Product removed from cart", cart: user.cart });
+      } else {
+          return next(new CustomError("Product not found in cart", 404));
+      }
+  } catch (error) {
+      return next(new CustomError(error.message, 500));
+  }
+};
+
+exports.toggleFavourite = async (req, res) => {
+  try {
+      const user = req.user;
+      const productId = req.params.productId;
+
+      const isAlreadyFavourite = user.favourite.some(item => item.toString() === productId);
+
+      if (isAlreadyFavourite) {
+          user.favourite = user.favourite.filter(item => item.toString() !== productId);
+          await user.save();
+          return res.status(200).send({ message: "Product removed from favourites", favourites: user.favourite });
+      } else {
+          user.favourite.push(productId);
+          await user.save();
+          return res.status(200).send({ message: "Product added to favourites", favourites: user.favourite });
+      }
+  } catch (error) {
+      return next(new CustomError(error.message, 500));
+  }
+};
+
+
+exports.getUserCart = async (req, res) => {
+  try {
+      const userId = req.user.id;
+      const user = await User.findById(userId)
+          .populate({
+              path: 'cart.productId',
+              model: 'Product'
+          });
+      return res.status(200).send({ message: "User Cart", cart: user.cart });
+  } catch (error) {
+      return next(new CustomError(error.message, 500));
+  }
+};
+
+exports.getUserFavourites = async (req, res) => {
+  try {
+      const userId = req.user.id;
+      const user = await User.findById(userId)
+          .populate({
+              path: 'favourite',
+              model: 'Product'
+          });
+
+      return res.status(200).send({ message: "User Favourite", favourite: user.favourite });
+  } catch (error) {
+      return next(new CustomError(error.message, 500));
   }
 };
