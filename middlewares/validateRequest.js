@@ -5,12 +5,21 @@ module.exports = (schema) => async (req, res, next) => {
         let bodyValidtion={...req.body}
         
         if (req.file) {
-            bodyValidtion={...req.body,
+            bodyValidtion={...bodyValidtion,
                 image:{
                     buffer: req.file.buffer,
                     mimetype: req.file.mimetype,
                     }
                 }
+        }
+        if (req.files) {
+            bodyValidation = {
+                ...bodyValidation,
+                images: req.files.map(file => ({
+                    buffer: file.buffer,
+                    mimetype: file.mimetype,
+                }))
+            };
         }
         
         await schema.validateAsync(bodyValidtion, { abortEarly: false });

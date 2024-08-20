@@ -20,6 +20,12 @@ const userSchema = new Schema({
     type: String,
     default: "user",
   },
+  restToken:{
+    type:String,
+  },
+  restTokenExpiration:{
+    type:Date,
+  },
   cart: [{
     productId: { type: Schema.Types.ObjectId, ref: 'Product' },
     quantity: { type: Number, default: 1 }
