@@ -18,7 +18,12 @@ const {
   updateProfileUser,
   changeUserPassword,
   forgetPassword,
-  restPassword,
+  resetPassword,
+  updateCartQuantity,
+  removeFromCart,
+  toggleFavourite,
+  getUserCart,
+  getUserFavourites
 } = require("../controllers/user");
 const auth = require("../middlewares/auth");
 
@@ -27,7 +32,8 @@ router.post("/login", validation(loginUser), login);
 router.patch(
   "/updateProfile",
   auth,
-  upload.single("image"),
+  upload.fields([
+    { name: 'image', maxCount: 1 }]),
   validation(updateProfile),
   singleImageUpload,
   updateProfileUser
@@ -39,6 +45,13 @@ router.patch(
   changeUserPassword
 );
 router.post("/forgetPassword", validation(forgetPasswordUser), forgetPassword);
-router.post("/resetPassword", validation(resetPasswordUser), restPassword);
+router.post("/resetPassword", validation(resetPasswordUser), resetPassword);
+router.post("/cart/:id",auth,updateCartQuantity)
+router.get("/cart",auth,getUserCart)
+router.delete("/cart/:id",auth,removeFromCart)
+router.post("/favourite/:id",auth,toggleFavourite)
+router.get("/favourite",auth,getUserFavourites)
+
+
 
 module.exports = router;

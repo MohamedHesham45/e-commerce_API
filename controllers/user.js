@@ -1,7 +1,7 @@
 const User = require("../models/users");
+const Product = require("../models/product");
+const Category = require("../models/category");
 const crypto = require("crypto");
-const sgMail = require("@sendgrid/mail");
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const bcrypt = require("bcrypt");
 const util = require("util");
 const jwt = require("jsonwebtoken");
@@ -58,7 +58,7 @@ exports.updateProfileUser = async (req, res, next) => {
   try {
     const user = await User.findByIdAndUpdate(
       req.user.id,
-      { name: req.name, image: req.user.image },
+      { name: req.body.name, image: req.body.image },
       { new: true }
     );
     if (!user) {
@@ -75,29 +75,20 @@ exports.changeUserPassword = async (req, res, next) => {
   let { currentPassword, newPassword } = req.body;
 
   try {
-    const user = await User.findById(req.user.id);
-
-    if (!user) {
-      return next(new CustomError("User not found.", 404));
-    }
+    const user = req.user;
 
     const isMatched = await bcrypt.compare(currentPassword, user.password);
 
     if (isMatched) {
-      newPassword = await bcrypt.hash(newPassword, 10);
+      user.password = newPassword;
     } else {
       return next(new CustomError("Current password is wrong", 401));
     }
-    console.log(user, newPassword);
 
-    const userUpated = await User.findByIdAndUpdate(req.user.id, {
-      password: newPassword,
-    });
+    await user.save()
 
     res.status(200).send({ message: "password updated successfully", user });
   } catch (error) {
-    console.log(error);
-
     next(new CustomError(error.message, 500));
   }
 };
@@ -108,41 +99,38 @@ exports.forgetPassword = async (req, res, next) => {
     if (!user) {
       return next(new CustomError("User not found.", 404));
     }
+
     const resetToken = crypto.randomBytes(3).toString("hex");
     const resetTokenExpiration = Date.now() + 3600000;
-    user.resetToken = resetToken;
-    user.resetTokenExpiration = resetTokenExpiration;
+    user.resetToken=resetToken
+    user.resetTokenExpiration=resetTokenExpiration
+
+    await user.save();
 
     const mailOptions = {
-      from: `Itians <${process.env.NODEMIALER_EMAIL}>`,
+      from: `Itians <${process.env.NODEMAILER_EMAIL}>`,
       to: user.email,
       subject: "Password Reset",
-      text: `this is reset token ${resetToken}`,
+      text: `This is your reset token: ${resetToken}`,
     };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        return next(new CustomError("error sending email", 404));
-      }
-      res.status(200).send({ message: "Token sended" });
-    });
+    await transporter.sendMail(mailOptions);
 
     res.status(200).send({ message: "Password reset email sent." });
 
-    await user.save();
   } catch (error) {
     next(new CustomError(error.message, 500));
   }
 };
 
-exports.restPassword = async (req, res, next) => {
-  const { token, email, newPassword, confirmPassword } = req.body;
+
+
+exports.resetPassword = async (req, res, next) => {
+  const { token, email, newPassword  } = req.body;
 
   try {
-    if (newPassword !== confirmPassword) {
-      return next(new CustomError("Passwords do not match.", 400));
-    }
-
+    
+    console.log(req.body);
     const user = await User.findOne({
       email,
       resetToken: token,
@@ -152,7 +140,7 @@ exports.restPassword = async (req, res, next) => {
       return next(new CustomError("User not found.", 404));
     }
 
-    user.password = await bcrypt.hash(newPassword, 10);
+    user.password = newPassword;
     user.resetToken = undefined;
     user.resetTokenExpiration = undefined;
     await user.save();
@@ -166,49 +154,59 @@ exports.restPassword = async (req, res, next) => {
 
 exports.updateCartQuantity = async (req, res, next) => {
   try {
-      const user = req.user;
-      const productId = req.params.productId;
-      const quantity = parseInt(req.body.quantity) || 1;
+      const userId = req.user.id; 
+      const productId = req.params.id;
+      const quantity = parseInt(req.body.quantity);
 
       if (isNaN(quantity)) {
           return next(new CustomError("Invalid quantity", 400));
       }
 
-      const cartItem = user.cart.find(item => item.productId.toString() === productId);
+      const user = await User.findById(userId).populate('cart.product');
+
+     
+      const cartItem = user.cart.find(item => item.product.id.toString() === productId);
 
       if (cartItem) {
           cartItem.quantity += quantity;
 
           if (cartItem.quantity <= 0) {
-              user.cart = user.cart.filter(item => item.productId.toString() !== productId);
-              return res.status(200).send({ message: "Product removed from cart", cart: user.cart });
+              user.cart = user.cart.filter(item => item.product.id.toString() !== productId);
           }
       } else {
+        const product = await Product.findById(productId).populate('categoryID', 'name');
+          if (!product) {
+              return next(new CustomError("Product not found", 404));
+          }
           if (quantity > 0) {
-              user.cart.push({ productId, quantity });
+              user.cart.push({ product , quantity });
           } else {
-              return next(new CustomError("Invalid operation. Cannot add a product with negative or zero quantity.", 400));
+              return next(new CustomError("Cannot add product with negative or zero quantity.", 400));
           }
       }
 
       await user.save();
-      res.status(200).send({ message: "Cart updated successfully", cart: user.cart });
 
+      res.status(200).send({ message: "Cart updated successfully", cart: user.cart });
   } catch (error) {
       return next(new CustomError(error.message, 500));
   }
 };
 
 
-exports.removeFromCart = async (req, res) => {
-  try {
-      const user = req.user;
-      const productId = req.params.productId;
 
-      const isInCart = user.cart.some(item => item.productId.toString() === productId);
+exports.removeFromCart = async (req, res, next) => {
+  try {
+    const userId = req.user.id; 
+    const productId = req.params.id;
+
+    const user = await User.findById(userId).populate('cart.product');
+
+
+      const isInCart = user.cart.find(item => item.product.id.toString() === productId);
 
       if (isInCart) {
-          user.cart = user.cart.filter(item => item.productId.toString() !== productId);
+          user.cart = user.cart.filter(item => item.product.id.toString() !== productId);
           await user.save();
           return res.status(200).send({ message: "Product removed from cart", cart: user.cart });
       } else {
@@ -219,34 +217,50 @@ exports.removeFromCart = async (req, res) => {
   }
 };
 
-exports.toggleFavourite = async (req, res) => {
+
+exports.toggleFavourite = async (req, res, next) => {
   try {
-      const user = req.user;
-      const productId = req.params.productId;
+    const userId = req.user.id; 
+    const productId = req.params.id;
+    
+    const user = await User.findById(userId).populate('favourite');
 
-      const isAlreadyFavourite = user.favourite.some(item => item.toString() === productId);
+    const isAlreadyFavourite = user.favourite.some(item => item._id.toString() === productId);
 
-      if (isAlreadyFavourite) {
-          user.favourite = user.favourite.filter(item => item.toString() !== productId);
-          await user.save();
-          return res.status(200).send({ message: "Product removed from favourites", favourites: user.favourite });
-      } else {
-          user.favourite.push(productId);
-          await user.save();
-          return res.status(200).send({ message: "Product added to favourites", favourites: user.favourite });
+    if (isAlreadyFavourite) {
+      user.favourite = user.favourite.filter(item => item._id.toString() !== productId);
+    } else {
+      const product = await Product.findById(productId).populate('categoryID', 'name');
+
+      if (!product) {
+        return next(new CustomError("Product not found", 404));
       }
+
+      user.favourite.push(product);
+    }
+
+    await user.save();
+
+    res.status(200).send({
+      message: isAlreadyFavourite
+        ? "Product removed from favourites"
+        : "Product added to favourites",
+      favourites: user.favourite
+    });
   } catch (error) {
-      return next(new CustomError(error.message, 500));
+    return next(new CustomError(error.message, 500));
   }
 };
 
 
-exports.getUserCart = async (req, res) => {
+
+
+exports.getUserCart = async (req, res,next) => {
   try {
       const userId = req.user.id;
       const user = await User.findById(userId)
           .populate({
-              path: 'cart.productId',
+              path: 'cart.product',
               model: 'Product'
           });
       return res.status(200).send({ message: "User Cart", cart: user.cart });
@@ -255,7 +269,7 @@ exports.getUserCart = async (req, res) => {
   }
 };
 
-exports.getUserFavourites = async (req, res) => {
+exports.getUserFavourites = async (req, res,next) => {
   try {
       const userId = req.user.id;
       const user = await User.findById(userId)

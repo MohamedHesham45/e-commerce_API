@@ -1,56 +1,54 @@
 const Category = require("../models/category");
 const Product = require("../models/product");
+const CustomError = require('../utils/customError');
 
-exports.createCategory = async (req, res) => {
+exports.createCategory = async (req, res, next) => {
   try {
     const existingCategory = await Category.findOne({ name: req.body.name });
     if (existingCategory) {
-      return res.status(409).json({ message: "Category already exists" });
+      return next(new CustomError("Category already exists", 409));
     }
     const category = new Category(req.body);
     await category.save();
-    res.status(201).json(category);
+    res.status(201).send({ message: "Category Created successfully", category });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return next(new CustomError(error.message, 500));
   }
 };
 
-exports.getCategories = async (req, res) => {
+exports.getCategories = async (req, res, next) => {
   try {
     const categories = await Category.find();
-    res.status(200).json(categories);
+    res.status(200).send({ message: "All Categories", categories });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return next(new CustomError(error.message, 500));
   }
 };
 
-exports.updateCategory = async (req, res) => {
+exports.updateCategory = async (req, res, next) => {
   try {
-    const category = await Category.findOneAndUpdate(
-      { id: req.params.id },
+    const category = await Category.findOneAndUpdate({ _id: req.params.id },
       req.body,
       { new: true }
     );
-    if (!category)
-      return res.status(400).send({ message: "Category not found" });
-    res.status(200).send(category);
+    if (!category) return next(new CustomError("Category not found", 400));
+    res.status(200).send({ message: "Category Updated successfully", category });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return next(new CustomError(error.message, 500));
   }
 };
 
-exports.deleteCategory = async (req, res) => {
+exports.deleteCategory = async (req, res, next) => {
   try {
-    const category = await Category.findOneAndDelete({ id: req.params.id });
-    if (!category)
-      return res.status(400).send({ message: "Category not found" });
+    const category = await Category.findOneAndDelete(req.params.id);
+    if (!category) return next(new CustomError("Category not found", 400));
 
     await Product.deleteMany({ categoryID: category._id });
 
     res
       .status(200)
-      .send({ message: "Category and related products deleted successfully" });
+      .send({ message: "Category and related products deleted successfully", category });
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    return next(new CustomError(error.message, 500));
   }
 };

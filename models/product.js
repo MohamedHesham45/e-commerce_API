@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema(
     warrantyInformation: { type: String },
     meta: { barcode: { type: String } },
     images: [String],
-    thumbnail: { type: String },
+    image: { type: String },
     reviews: [
       {
         user: {

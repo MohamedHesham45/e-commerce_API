@@ -14,22 +14,23 @@ const userSchema = new Schema({
   },
   image: {
     type: String,
-    default: "./user/avatar.png"
+    default: "https://ik.imagekit.io/7ksxy0uxk/e-commerce/image-66bd20d57bc0778bbe723d3a-1724163754541_D9lZaYMkG.jpeg?updatedAt=1724163756240"
   },
   role: {
     type: String,
     default: "user",
   },
-  restToken:{
-    type:String,
+  resetToken: {
+    type: String,
   },
-  restTokenExpiration:{
-    type:Date,
+  resetTokenExpiration: {
+    type: Date,
   },
   cart: [{
-    productId: { type: Schema.Types.ObjectId, ref: 'Product' },
+    product: { type: Schema.Types.ObjectId, ref: 'Product' },
     quantity: { type: Number, default: 1 }
-  }],
+  }]
+  ,
 
   favourite: [{ type: Schema.Types.ObjectId, ref: 'Product' }]
 
