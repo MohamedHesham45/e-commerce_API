@@ -24,6 +24,10 @@ app.use(adminRoute);
 app.use(productRoute);
 app.use(categoryRoute);
 app.use(stripeRoute)
+app.use((req, res, next) => {
+  logger.error(`${req.method} ${req.url} - ${new Date().toISOString()} - Error: 404 not found this req`);
+  res.status(404).json({ message: "Resource not found" });
+});
 
 
 app.use((err, req, res, next) => {
@@ -51,9 +55,7 @@ app.use((err, req, res, next) => {
         });
         await admin.save();
       }
-      app.listen(process.env.PORT||PORT,() => {
-        console.log(`Server is running on port ${PORT}`);
-      });
+     
     } catch (error) {
   logger.error(` ${new Date().toISOString()} - Error: ${error.message}`); 
 
@@ -67,4 +69,5 @@ app.use((err, req, res, next) => {
     console.error('Database connection error:', error);
     process.exit(1);
   });
+  module.exports=app
   
