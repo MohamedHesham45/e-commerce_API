@@ -7,6 +7,7 @@ const usersRoute = require("./routes/user");
 const adminRoute = require("./routes/admin");
 const productRoute = require("./routes/product");
 const categoryRoute = require("./routes/category");
+const stripeRoute = require("./routes/stripe");
 
 const loggerMiddleware = require('./middlewares/loggerMid');
 const logger = require('./utils/loggerFun');
@@ -22,7 +23,7 @@ app.use(usersRoute);
 app.use(adminRoute);
 app.use(productRoute);
 app.use(categoryRoute);
-
+app.use(stripeRoute)
 
 
 app.use((err, req, res, next) => {
