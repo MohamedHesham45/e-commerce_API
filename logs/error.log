@@ -1,0 +1,9 @@
+{"level":"error","message":" 2024-08-23T22:01:53.551Z - Error: queryTxt ETIMEOUT first.fb06m.mongodb.net"}
+{"level":"error","message":" 2024-08-23T22:02:49.991Z - Error: queryTxt ETIMEOUT first.fb06m.mongodb.net"}
+{"level":"error","message":" 2024-08-23T22:07:18.420Z - Error: queryTxt ETIMEOUT cluster0.d5m90.mongodb.net"}
+{"level":"error","message":" 2024-08-23T22:10:13.204Z - Error: queryTxt ETIMEOUT cluster0.d5m90.mongodb.net"}
+{"level":"error","message":" 2024-08-23T22:10:45.550Z - Error: queryTxt ETIMEOUT first.fb06m.mongodb.net"}
+{"level":"error","message":" 2024-08-23T22:12:16.794Z - Error: queryTxt ETIMEOUT first.fb06m.mongodb.net"}
+{"level":"error","message":" 2024-08-23T22:12:58.182Z - Error: queryTxt ETIMEOUT first.fb06m.mongodb.net"}
+{"level":"error","message":" 2024-08-23T22:13:38.666Z - Error: queryTxt ETIMEOUT first.fb06m.mongodb.net"}
+{"level":"error","message":" 2024-08-23T22:17:26.360Z - Error: queryTxt ETIMEOUT cluster0.d5m90.mongodb.net"}
