@@ -1,6 +1,0 @@
-{"level":"error","message":" 2024-08-23T22:49:14.581Z - Error: queryTxt ETIMEOUT cluster0.d5m90.mongodb.net"}
-{"level":"error","message":" 2024-08-23T22:51:20.316Z - Error: queryTxt ETIMEOUT cluster0.d5m90.mongodb.net"}
-{"level":"error","message":" 2024-08-23T22:56:08.758Z - Error: queryTxt ETIMEOUT cluster0.d5m90.mongodb.net"}
-{"level":"error","message":"GET / - 2024-08-23T23:03:02.747Z - Error: 404 not found this req"}
-{"level":"error","message":"GET /favicon.ico - 2024-08-23T23:03:14.033Z - Error: 404 not found this req"}
-{"level":"error","message":"POST /login - 2024-08-23T23:03:49.957Z - Error: Invalid email or password"}
