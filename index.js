@@ -8,7 +8,7 @@ const adminRoute = require("./routes/admin");
 const productRoute = require("./routes/product");
 const categoryRoute = require("./routes/category");
 const stripeRoute = require("./routes/stripe");
-
+var cors = require('cors')
 const loggerMiddleware = require('./middlewares/loggerMid');
 const logger = require('./utils/loggerFun');
 const CustomError = require('./utils/customError');
@@ -18,6 +18,7 @@ const app = express();
 app.use(express.json());
 app.use(express.static("./public"));
 app.use(loggerMiddleware);
+app.use(cors())
 
 app.use(usersRoute);
 app.use(adminRoute);
@@ -55,7 +56,7 @@ app.use((err, req, res, next) => {
         });
         await admin.save();
       }
-     
+     console.log("hi");
     } catch (error) {
   logger.error(` ${new Date().toISOString()} - Error: ${error.message}`); 
 
