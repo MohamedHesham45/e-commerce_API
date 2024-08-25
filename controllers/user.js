@@ -45,7 +45,7 @@ exports.login = async (req, res, next) => {
         }
       );
 
-      res.status(200).send({ message: "User logged in", token });
+      res.status(200).send({ message: "User logged in", token ,user});
     } else {
       return next(new CustomError("Invalid email or password", 401));
     }
