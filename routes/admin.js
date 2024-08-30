@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 ///////////////////////////////////////controllers///////////////////////////////
-const { creatAdmin } = require("../controllers/admin");
+const { creatAdmin, editAdmin, deleteAdmin, getAllAdmin } = require("../controllers/admin");
 
 //////////////////////////////////////middlewares////////////////////////////
 const checkRole = require("../middlewares/checkRole");
@@ -11,14 +11,34 @@ const validation = require("../middlewares/validateRequest");
 
 
 //////////////////////////////////validation//////////////////////////////////
-const { createUser } = require("../utils/validation/user");
+const { createAdminValidation, updateAdminValidation } = require("../utils/validation/admin");
+
 
 
 router.post(
-    "/creat-admin",
+    "/admin",
     auth,
     checkRole(["admin"]),
-    validation(createUser),
+    validation(createAdminValidation),
     creatAdmin
 );
+router.get(
+    "/admin",
+    auth,
+    checkRole(["admin"]),
+    getAllAdmin
+
+)
+router.patch("/admin",
+    auth,
+    checkRole(["admin"]),
+    validation(updateAdminValidation),
+    editAdmin
+)
+router.delete("/admin",
+    auth,
+    checkRole(["admin"]),
+    deleteAdmin
+)
+
 module.exports = router;

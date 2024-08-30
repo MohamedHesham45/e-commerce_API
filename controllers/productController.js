@@ -1,7 +1,6 @@
 const Product = require("../models/product");
 const Category = require("../models/category");
 const CustomError = require('../utils/customError');
-const { log } = require("console");
 
 exports.createProduct = async (req, res, next) => {
   try {
@@ -152,8 +151,6 @@ exports.searchProducts = async (req, res, next) => {
       maxStock,
       rating,
       sale,
-      page = 1,
-      limit = 10
     } = req.query;
 
     const searchConditions = {};
@@ -204,30 +201,28 @@ exports.searchProducts = async (req, res, next) => {
       searchConditions.discountPercentage = { $exists: false };
     }
 
-    const pageNumber = parseInt(page, 10);
-    const pageSize = parseInt(limit, 10);
-    const skip = (pageNumber - 1) * pageSize;
+    // const pageNumber = parseInt(page, 10);
+    // const pageSize = parseInt(limit, 10);
+    // const skip = (pageNumber - 1) * pageSize;
 
     const [products, totalProducts] = await Promise.all([
       Product.find(searchConditions)
-        .populate('categoryID', 'name')
-        .skip(skip)
-        .limit(pageSize),
+        .populate('categoryID', 'name'),
       Product.countDocuments(searchConditions)
     ]);
 
-    const totalPages = Math.ceil(totalProducts / pageSize);
+    // const totalPages = Math.ceil(totalProducts / pageSize);
 
     res.status(200).send({
       message:"Product match yor query",
       products,
-      pagination: {
-        total: totalProducts,
-        pages: totalPages,
-        page: pageNumber,
-        prev: pageNumber > 1,
-        next: pageNumber < totalPages,
-      }
+      // pagination: {
+      //   total: totalProducts,
+      //   pages: totalPages,
+      //   page: pageNumber,
+      //   prev: pageNumber > 1,
+      //   next: pageNumber < totalPages,
+      // }
     });
   } catch (error) {
     return next(new CustomError(error.message, 500));
