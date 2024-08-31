@@ -31,7 +31,7 @@ exports.login = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate('cart.product').populate('favourite'); ;
     if (!user) {
       return next(new CustomError("Invalid email or password", 401));
     }
