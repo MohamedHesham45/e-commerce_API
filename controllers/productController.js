@@ -69,7 +69,10 @@ exports.getProductsByCategoryAndDiscount = async (req, res, next) => {
     const categories = await Category.find();
 
     const productsByCategoryPromises = categories.map(async (category) => {
-      return [category.name]: await Product.find({ categoryID: category._id }).limit(5),
+      return {
+
+        [category.name]: await Product.find({ categoryID: category._id }).limit(5),
+      };
     });
 
     const productsByCategory = await Promise.all(productsByCategoryPromises);
