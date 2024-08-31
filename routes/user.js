@@ -23,8 +23,9 @@ const {
   removeFromCart,
   toggleFavourite,
   getUserCart,
-  getUserFavourites
-} = require("../controllers/user");
+  getUserFavourites,
+  addToCartWithoutLogin
+} = require("../controllers/user"); 
 const auth = require("../middlewares/auth");
 
 router.post("/signup", validation(createUser), signup);
@@ -47,6 +48,7 @@ router.patch(
 router.post("/forgetPassword", validation(forgetPasswordUser), forgetPassword);
 router.post("/resetPassword", validation(resetPasswordUser), resetPassword);
 router.post("/cart/:id",auth,updateCartQuantity)
+router.post("/cart",auth,addToCartWithoutLogin)
 router.get("/cart",auth,getUserCart)
 router.delete("/cart/:id",auth,removeFromCart)
 router.post("/favourite/:id",auth,toggleFavourite)

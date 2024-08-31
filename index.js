@@ -56,9 +56,9 @@ app.use((err, req, res, next) => {
         });
         await admin.save();
       }
-      // app.listen(PORT,()=>{
-      //   console.log("started with URL: http://localhost:3000/");
-      // })
+      app.listen(PORT,()=>{
+        console.log("started with URL: http://localhost:3000/");
+      })
      console.log("hi");
     } catch (error) {
   logger.error(` ${new Date().toISOString()} - Error: ${error.message}`); 
@@ -73,5 +73,5 @@ app.use((err, req, res, next) => {
     console.error('Database connection error:', error);
     process.exit(1);
   });
-  module.exports=app
+  // module.exports=app
   

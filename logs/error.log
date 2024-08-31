@@ -1,0 +1,10 @@
+{"level":"error","message":"POST /cart - 2024-08-31T10:13:24.455Z - Error: Cast to ObjectId failed for value \"productId2\" (type string) at path \"_id\" for model \"Product\"","service":"user-service"}
+{"level":"error","message":" 2024-08-31T12:15:49.913Z - Error: querySrv ETIMEOUT _mongodb._tcp.cluster0.d5m90.mongodb.net","service":"user-service"}
+{"level":"error","message":" 2024-08-31T12:16:53.428Z - Error: querySrv ETIMEOUT _mongodb._tcp.cluster0.d5m90.mongodb.net","service":"user-service"}
+{"level":"error","message":" 2024-08-31T12:17:48.239Z - Error: querySrv ETIMEOUT _mongodb._tcp.cluster0.d5m90.mongodb.net","service":"user-service"}
+{"level":"error","message":"POST /cart - 2024-08-31T12:19:52.861Z - Error: consloe is not defined","service":"user-service"}
+{"level":"error","message":"POST /cart - 2024-08-31T12:20:34.431Z - Error: Cast to ObjectId failed for value \"productId2\" (type string) at path \"_id\" for model \"Product\"","service":"user-service"}
+{"level":"error","message":"POST /cart - 2024-08-31T12:25:16.022Z - Error: Product with id 66ce23625cecbbe785ed2957 not found","service":"user-service"}
+{"level":"error","message":"POST /cart - 2024-08-31T12:26:25.408Z - Error: Product with id 66ca19f4f536f9776c7d695f not found","service":"user-service"}
+{"level":"error","message":"POST /cart - 2024-08-31T12:30:42.322Z - Error: Invalid productId or quantity","service":"user-service"}
+{"level":"error","message":"POST /cart - 2024-08-31T12:34:19.275Z - Error: Invalid productId or quantity","service":"user-service"}

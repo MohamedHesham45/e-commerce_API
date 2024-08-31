@@ -284,36 +284,59 @@ exports.getUserFavourites = async (req, res, next) => {
   }
 };
 
-exports.addCartWithoutLogin = async (req, res, next) => {
+exports.addToCartWithoutLogin = async (req, res, next) => {
   try {
-    let cookieCart = req.body.cart; //
-    let userCart = user.cart; //
+    const userId = req.user.id;
+    const cartItems = req.body.cartItems; 
 
-    userCart = userCart.filter((obj1) =>
-      cookieCart.some((obj2) => obj2.id === obj1.id)
-    );
+    if (!Array.isArray(cartItems)) {
+      return next(new CustomError("Invalid cart data", 400));
+    }
 
-
-    cookieCart.forEach((item) => {
-      const existingProductIndex = userCart.findIndex(
-        (cartItem) => cartItem.productId.toString() === item.productId
-      );
-      if (existingProductIndex > -1) {
-        if (userCart[existingProductIndex].quantity !== item.quantity) {
-          userCart[existingProductIndex].quantity = item.quantity;
-        }
-      } else {
-        userCart.push(item);
+    for (let item of cartItems) {
+      if (!item.productId || typeof item.quantity !== 'number' || item.quantity <= 0) {
+        return next(new CustomError("Invalid productId or quantity", 400)); 
       }
+    }
+
+    const user = await User.findById(userId).populate('cart.product');
+   
+
+    const incomingProductIds = new Set(cartItems.map(item => item.productId.toString()));
+
+    user.cart = user.cart.filter(cartItem => {
+      const productId = cartItem.product.id.toString();
+      if (!incomingProductIds.has(productId)) {
+        return false; 
+      }
+      return true; 
     });
-    
 
-    user.cart = userCart;
+    for (let item of cartItems) {
+      const product = await Product.findById(item.productId).populate('categoryID', 'name');
+      if (!product) {
+        return next(new CustomError(`Product with id ${item.productId} not found`, 404));
+      }
+
+      const existingCartItem = user.cart.find(cartItem => cartItem.product.id.toString() === item.productId);
+
+      if (existingCartItem) {
+        existingCartItem.quantity = item.quantity;
+
+        
+      } else {
+        if (item.quantity > 0) {
+          user.cart.push({ product, quantity: item.quantity });
+        } else {
+          return next(new CustomError("Cannot add product with negative or zero quantity.", 400));
+        }
+      }
+    }
+
     await user.save();
-    res.clearCookie("cart");
 
-    res.send({ message: "user logged in", token });
-  }catch (error) {
-  return next(new CustomError(error.message, 500));
+    res.status(200).send({ message: "Cart updated successfully", cart: user.cart });
+  } catch (error) {
+    return next(new CustomError(error.message, 500));
   }
-}
+};
