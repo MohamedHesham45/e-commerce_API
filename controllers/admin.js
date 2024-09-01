@@ -28,8 +28,7 @@ exports.editAdmin = async (req, res, next) => {
     try {
         const body = req.body
         const user = await User.findByIdAndUpdate(
-            req.params.id,
-            { body },
+            req.params.id,body,
             { new: true }
         );
         if (!user) {

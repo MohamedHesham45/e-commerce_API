@@ -8,3 +8,7 @@
 {"level":"error","message":"POST /cart - 2024-08-31T12:26:25.408Z - Error: Product with id 66ca19f4f536f9776c7d695f not found","service":"user-service"}
 {"level":"error","message":"POST /cart - 2024-08-31T12:30:42.322Z - Error: Invalid productId or quantity","service":"user-service"}
 {"level":"error","message":"POST /cart - 2024-08-31T12:34:19.275Z - Error: Invalid productId or quantity","service":"user-service"}
+{"level":"error","message":" 2024-09-01T18:08:04.132Z - Error: connect ECONNREFUSED 127.0.0.1:27017","service":"user-service"}
+{"level":"error","message":"PATCH /admin/66d32ab77d1144fcaf8d1810 - 2024-09-01T18:10:16.467Z - Error: User not found","service":"user-service"}
+{"level":"error","message":"PATCH /admin/66bd98aff1d1e562b4b61625 - 2024-09-01T18:13:31.697Z - Error: User not found","service":"user-service"}
+{"level":"error","message":"PATCH /admin/66bd98aff1d1e562b4b61625 - 2024-09-01T18:16:43.241Z - Error: Invalid token","service":"user-service"}
