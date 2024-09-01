@@ -71,11 +71,9 @@ const updateProductSchema = Joi.object({
       'string.max': 'Title should have a maximum length of 100 characters',
     }),
   description: Joi.string(),
-  categoryID: Joi.string()
-    .pattern(/^[0-9a-fA-F]{24}$/)
-    .messages({
-      'string.pattern.base': 'Category ID should be a valid ObjectId',
-    }),
+  categoryName: Joi.string().messages({
+    'string.base': 'Category name should be a type of text',
+  }),
   price: Joi.number()
     .positive()
     .messages({

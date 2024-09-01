@@ -229,4 +229,11 @@ exports.searchProducts = async (req, res, next) => {
   }
 };
 
+exports.addReviews = async (req,res,next) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+}
 
