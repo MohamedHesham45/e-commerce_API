@@ -104,5 +104,23 @@ const updateProductSchema = Joi.object({
       'object.base': 'image must be an object',
     }),
 });
+const reviewSchema = Joi.object({
+  reviewText: Joi.string()
+    .max(500)
+    .messages({
+      'string.max': 'Review text should not exceed 500 characters.',
+    }),
+  rating: Joi.number()
+    .integer()
+    .min(1)
+    .max(5)
+    .required()
+    .messages({
+      'number.base': 'Rating must be a number.',
+      'number.min': 'Rating must be at least 1.',
+      'number.max': 'Rating must be at most 5.',
+      'any.required': 'Rating is a required field.',
+    }),
+});
 module.exports = { updateProductSchema, createProductSchema };
 

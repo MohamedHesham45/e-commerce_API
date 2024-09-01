@@ -46,23 +46,27 @@ exports.createProduct = async (req, res, next) => {
     return next(new CustomError(error.message, 500));
   }
 };
+
+
 exports.getProductById = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id).populate('categoryID', 'name');
+    const product = await Product.findById(req.params.id)
+      .populate('categoryID', 'name') 
+      .populate('reviews.user'); 
 
     if (!product) {
       return next(new CustomError('Product not found', 404));
     }
 
-
     res.status(200).send({
-      message:"Product match ID",
+      message: "Product with you id",
       product,
     });
   } catch (error) {
     return next(new CustomError(error.message, 500));
   }
 };
+
 
 exports.getProductsByCategoryAndDiscount = async (req, res, next) => {
   try {
@@ -229,11 +233,38 @@ exports.searchProducts = async (req, res, next) => {
   }
 };
 
-exports.addReviews = async (req,res,next) => {
+
+
+exports.addReviews = async (req, res, next) => {
   try {
+    const user = req.user;
+    const { reviewText, rating } = req.body;
     
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return next(new CustomError("Product not found", 404));
+    }
+
+    product.reviews.push({
+      user: user._id,
+      reviewText,
+      rating,
+      updatedAt: Date.now(), 
+    });
+
+    product.calculateRating();
+
+    await product.save();
+
+    await product.populate('reviews.user');
+
+    res.status(200).send({
+      massage:"youer review added",
+      product
+    });
   } catch (error) {
-    
+    return next(new CustomError(error.message, 500));
   }
-}
+};
+
 
