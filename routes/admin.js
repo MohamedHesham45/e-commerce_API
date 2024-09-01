@@ -29,13 +29,13 @@ router.get(
     getAllAdmin
 
 )
-router.patch("/admin",
+router.patch("/admin/:id",
     auth,
     checkRole(["admin"]),
     validation(updateAdminValidation),
     editAdmin
 )
-router.delete("/admin",
+router.delete("/admin/:id",
     auth,
     checkRole(["admin"]),
     deleteAdmin
