@@ -40,7 +40,7 @@ exports.updateCategory = async (req, res, next) => {
 
 exports.deleteCategory = async (req, res, next) => {
   try {
-    const category = await Category.findOneAndDelete(req.params.id);
+    const category = await Category.findByIdAndDelete(req.params.id)
     if (!category) return next(new CustomError("Category not found", 400));
 
     await Product.deleteMany({ categoryID: category._id });
