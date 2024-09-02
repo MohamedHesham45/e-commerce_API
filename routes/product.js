@@ -24,7 +24,6 @@ const upload = multer();
 const {
     createProductSchema,
     updateProductSchema,
-    reviewSchema
 } = require("../utils/validation/productvalidation");
 
 router.post(
@@ -62,5 +61,5 @@ router.delete("/product/:id",
     checkRole(["admin"]),
     deleteProduct
 )
-router.post("/product/review/:id",auth,validation(reviewSchema),addReviews)
+router.post("/product/review/:id",auth,addReviews)
 module.exports = router;

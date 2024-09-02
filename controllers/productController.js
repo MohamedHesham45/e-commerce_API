@@ -263,6 +263,7 @@ exports.addReviews = async (req, res, next) => {
       product
     });
   } catch (error) {
+    console.log(error);
     return next(new CustomError(error.message, 500));
   }
 };

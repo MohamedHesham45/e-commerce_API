@@ -29,3 +29,17 @@
 {"level":"error","message":"PATCH /admin/66bd98aff1d1e562b4b61625 - 2024-09-01T18:16:43.241Z - Error: Invalid token","service":"user-service"}
 {"level":"info","message":"PATCH /admin/66bd98aff1d1e562b4b61625 - 2024-09-01T18:17:02.840Z","service":"user-service"}
 {"level":"info","message":"PATCH /admin/66bd98aff1d1e562b4b61625 - 2024-09-01T18:17:50.003Z","service":"user-service"}
+{"level":"info","message":"POST /product/review/66d4eda80b647b4a77449898 - 2024-09-02T04:59:19.619Z","service":"user-service"}
+{"level":"error","message":"POST /product/review/66d4eda80b647b4a77449898 - 2024-09-02T04:59:19.694Z - Error: User not found","service":"user-service"}
+{"level":"info","message":"POST /login - 2024-09-02T04:59:45.208Z","service":"user-service"}
+{"level":"error","message":"POST /login - 2024-09-02T04:59:45.242Z - Error: Invalid email or password","service":"user-service"}
+{"level":"info","message":"POST /login - 2024-09-02T05:00:21.523Z","service":"user-service"}
+{"level":"info","message":"POST /product/review/66c4863ce203e45887247a10 - 2024-09-02T05:02:24.917Z","service":"user-service"}
+{"level":"error","message":"POST /product/review/66c4863ce203e45887247a10 - 2024-09-02T05:02:24.945Z - Error: Cannot read properties of undefined (reading 'map')","service":"user-service"}
+{"level":"info","message":"POST /product/review/66c4863ce203e45887247a10 - 2024-09-02T05:04:38.072Z","service":"user-service"}
+{"level":"error","message":"POST /product/review/66c4863ce203e45887247a10 - 2024-09-02T05:04:38.264Z - Error: Cannot read properties of undefined (reading 'map')","service":"user-service"}
+{"level":"info","message":"POST /product/review/66c4863ce203e45887247a10 - 2024-09-02T05:06:48.927Z","service":"user-service"}
+{"level":"error","message":"POST /product/review/66c4863ce203e45887247a10 - 2024-09-02T05:06:49.020Z - Error: Cannot read properties of undefined (reading 'map')","service":"user-service"}
+{"level":"info","message":"POST /product/review/66c4863ce203e45887247a10 - 2024-09-02T05:09:09.282Z","service":"user-service"}
+{"level":"error","message":"POST /product/review/66c4863ce203e45887247a10 - 2024-09-02T05:09:09.500Z - Error: reviewText is not defined","service":"user-service"}
+{"level":"info","message":"POST /product/review/66c4863ce203e45887247a10 - 2024-09-02T05:12:35.934Z","service":"user-service"}
