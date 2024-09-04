@@ -25,6 +25,7 @@ const {
     createProductSchema,
     updateProductSchema,
 } = require("../utils/validation/productvalidation");
+const { stripe } = require("../controllers/stripe");
 
 router.post(
     "/product",
@@ -42,7 +43,7 @@ router.post(
 router.get("/product/:id",getProductById)
 router.get("/product",getProductsByCategoryAndDiscount)
 router.get("/search",searchProducts)
-
+router.post("/api/payment/checkout",stripe)
 router.patch(
     "/product/:id",
     auth,

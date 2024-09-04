@@ -1,4 +1,5 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
 exports.stripe = async (req, res, next) => {
     let items = req.body;
     const nowItems = items.map((item) => {
@@ -12,16 +13,22 @@ exports.stripe = async (req, res, next) => {
             },
             quantity: item.quantity,
         }
-    })
-    const session = await stripe.checkout.sessions.create({
-        line_items: nowItems,
-        mode: "payment",
-       
-        success_url: `${process.env.BASE_URL}/complete?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.BASE_URL}/cancel`,
     });
-    res.redirect(session.url);
-}
+
+    try {
+        const session = await stripe.checkout.sessions.create({
+            line_items: nowItems,
+            mode: "payment",
+            success_url: `${process.env.BASE_URL}/complete?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.BASE_URL}/cancel`,
+        });
+        console.log(session)
+        res.json({ url: session});
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred during checkout.');
+    }
+};
 exports.completePayment = async (req, res, next) => {
     const session_id = req.query.session_id;
 
