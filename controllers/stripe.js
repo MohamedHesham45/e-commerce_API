@@ -23,7 +23,7 @@ exports.stripe = async (req, res, next) => {
             cancel_url: `${process.env.BASE_URL}/cancel`,
         });
         console.log(session)
-        res.json({ url: session});
+        res.json({ url: session.url});
     } catch (error) {
         console.error(error);
         res.status(500).send('An error occurred during checkout.');
